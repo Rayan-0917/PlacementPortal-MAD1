@@ -2,41 +2,41 @@ import sqlite3
 from werkzeug.security import generate_password_hash
 
 def init_db():
-    conn=sqlite3.connect('placement.db')
+    conn=sqlite3.connect('Placement.db')
     cursor=conn.cursor()
 
-    #users table-roles
-    cursor.execute(''' create table if not exists users (
+    #users table - roles
+    cursor.execute('''create table if not exists users (
         id integer primary key autoincrement,
         username text unique not null,
         password text not null,
         role text not null,
-        is_approved integer default 0
-        is_blacklisted integer default 0    
-    ) ''')
-
-    #companies
+        is_approved integer default 0,
+        is_blacklisted integer default 0
+       ) ''')
+    
+    #companies table
     cursor.execute(''' create table if not exists companies (
-        id integer primary key autoincrement,
-        user_id integer,
-        company_name text,
-        hr_contact text,
-        website text,
-        description text,
-        foreign key(user_id) references users (id)               
-    )''')
-
-    #students 
+            id integer primary key autoincrement,
+            user_id integer,
+            company_name text,
+            hr_contact text,
+            website text,
+            description text,
+            foreign key(user_id) references users (id)           
+        ) ''')
+    
+    #students table
     cursor.execute(''' create table if not exists students (
-        id integer primary key autoincrement,
-        user_id integer,
-        student_name text,
-        email text,
-        department text,
-        resume_url text,  
-        foreign key(user_id) references users (id)             
-    ) ''')
-
+            id integer primary key autoincrement,
+            user_id integer,
+            student_name text,
+            email text,
+            department text,
+            resume_url text,
+            foreign key(user_id) references users (id)
+        ) ''')
+    
     #placement drives table
     cursor.execute(''' create table if not exists drives (
             id integer primary key autoincrement,
