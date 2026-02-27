@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h3>Welcome, Admin</h3>
+
+<div class="row mt-4 mb-5">
+    <div class="col-md-6">
+        <div class="card border-warning h-100">
+            <div class="card-header bg-warning text-danger fw-bold">Pending Company Approvals</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Company 1
+                        <a href="#" class="btn btn-xs btn-success py-0">Approve</a>
+                    </li>
+                </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-warning h-100">
+            <div class="card-header bg-warning text-danger fw-bold">Pending Drive Approvals</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Drive 1 <small>Company 1</small>
+                        <a href="#" class="btn btn-xs btn-success py-0">Approve</a>
+                    </li>
+                </ul>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h4>All Students</h4>
+
+<div class="card shadow-sm mb-4">
+    <table class="table table-striped mb-0">
+        <thead class="table-primary">
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Rayan</td>
+                <td>Information Technology</td>
+                <td>Active</td>
+                <td>Blacklist</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<hr>
+
+<h4>All Companies</h4>
+
+<div class="card shadow-sm mb-4">
+    <table class="table table-striped mb-0">
+        <thead class="table-primary">
+            <tr>
+                <th>Company Name</th>
+                <th>Website</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Company 1</td>
+                <td><a href="#">Company 1 Wesbsite</a></td>
+                <td>Active</td>
+                <td>Blacklist</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<hr>
+
+<h4>All Drives</h4>
+
+<div class="card shadow-sm mb-4">
+    <table class="table table-striped mb-0">
+        <thead class="table-primary">
+            <tr>
+                <th>Drive Name</th>
+                <th>Company</th>
+                <th>Job Title</th>
+                <th>Ongoing</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Drive 1</td>
+                <td>Company 1</td>
+                <td>Full Stack Developer</td>
+                <td>Open</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -17,5 +17,17 @@ def registerStudent():
 def registerCompany():
     return render_template('registerCompany.html')
 
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    return render_template('admin_dashboard.html')
+
+@app.route('/student_dashboard')
+def student_dashboard():
+    return render_template('student_dashboard.html')
+
+@app.route('/company_dashboard')
+def company_dashboard():
+    return render_template('company_dashboard.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
