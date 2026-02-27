@@ -10,6 +10,7 @@ def init_db():
         id integer primary key autoincrement,
         username text unique not null,
         password text not null,
+        email text unique not null,
         role text not null,
         is_approved integer default 0,
         is_blacklisted integer default 0
@@ -68,7 +69,7 @@ def init_db():
     #admin user
     admin_password=generate_password_hash('admin123')
     try:
-        cursor.execute("insert into users (username, password, role, is_approved) values (?, ?, ?, ?)" , ("admin", admin_password, "Admin", 1))
+        cursor.execute("insert into users (username, password, email, role, is_approved) values (?, ?, ?, ?, ?)" , ("admin", admin_password, "admin@gmail.com", "Admin", 1))
     except sqlite3.IntegrityError:
         pass
 
