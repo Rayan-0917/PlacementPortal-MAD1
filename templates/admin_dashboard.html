@@ -7,23 +7,27 @@
     <div class="col-md-6">
         <div class="card border-warning h-100">
             <div class="card-header bg-warning text-danger fw-bold">Pending Company Approvals</div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Company 1
-                        <a href="#" class="btn btn-xs btn-success py-0">Approve</a>
-                    </li>
-                </ul>
+            <ul class="list-group list-group-flush">
+                {% for company in pending_companies %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{company.company_name}}
+                    <a href="/admin/approve_company/{{company.id}}" class="btn btn-xs btn-success py-0">Approve</a>
+                </li>
+                {% else %}
+                <li class="list-group-item text-muted small">No pending companies.</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
     <div class="col-md-6">
         <div class="card border-warning h-100">
             <div class="card-header bg-warning text-danger fw-bold">Pending Drive Approvals</div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Drive 1 <small>Company 1</small>
-                        <a href="#" class="btn btn-xs btn-success py-0">Approve</a>
-                    </li>
-                </ul>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Drive 1 <small>Company 1</small>
+                    <a href="#" class="btn btn-xs btn-success py-0">Approve</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
@@ -43,12 +47,18 @@
             </tr>
         </thead>
         <tbody>
+            {% for student in all_students %}
             <tr>
-                <td>Rayan</td>
-                <td>Information Technology</td>
-                <td>Active</td>
-                <td>Blacklist</td>
+                <td>{{student.student_name}}</td>
+                <td>{{student.department}}</td>
+                <td>
+                    <span class="badge {{'bg-danger' if student.is_blacklisted else 'bg-success'}}">
+                        {{'Blacklisted' if student.is_blacklisted else 'Active'}}
+                    </span>
+                </td>
+                <td><a href="/admin/blacklist/{{student.user_id}}" class="btn btn-xs p-0 text-danger">Blacklist</a></td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
@@ -68,12 +78,27 @@
             </tr>
         </thead>
         <tbody>
+            {% for company in all_companies %}
             <tr>
-                <td>Company 1</td>
-                <td><a href="#">Company 1 Wesbsite</a></td>
-                <td>Active</td>
-                <td>Blacklist</td>
+                <td>{{company.company_name}}</td>
+                <td>
+                    {% if company.website %}
+                    <a href="{{ company.website if 'http' in company.website else 'https://' + company.website }}"
+                        target="_blank" class="text-decoration-none">
+                        Visit Site ↗
+                    </a>
+                    {% else %}
+                    <span class="text-muted small">Not Provided</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="badge {{'bg-danger' if company.is_blacklisted else 'bg-success'}}">
+                        {{'Blacklisted' if company.is_blacklisted else 'Active'}}
+                    </span>
+                </td>
+                <td><a href="/admin/blacklist/{{company.user_id}}" class="btn btn-xs p-0 text-danger">Blacklist</a></td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
