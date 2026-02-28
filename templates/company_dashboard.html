@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h3>Welcome, Company Name</h3>
+<h3>Welcome, {{company.company_name}}</h3>
 
 <div class="row  mt-4 mb-5">
     <div class="col-md-8">
@@ -10,16 +10,17 @@
             <form action="#" method="POST">
                 <div class="mb-3">
                     <label class="form-label">Website</label>
-                    <input type="url" name="website" class="form-control" placeholder="https://example.com">
+                    <input type="url" name="website" class="form-control" value="{{company.website or ''}}" placeholder="https://example.com">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">HR Contact</label>
-                    <input type="text" name="hr_contact" class="form-control">
+                    <input type="text" name="hr_contact" value="{{company.hr_contact or ''}}" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">About the Company</label>
-                    <textarea name="description" class="form-control" rows="3"></textarea>
+                    <textarea name="description" class="form-control" rows="3">{{ company.description or '' }}</textarea>
                 </div>
+                <button type="submit" class="btn btn-primary">Save Profile Changes</button>
             </form>
         </div>
     </div>
@@ -45,16 +46,28 @@
                 </tr>
             </thead>
             <tbody>
+                {% for drive in drives %}
                 <tr>
-                    <td>Drive 1</td>
-                    <td>Full Stack Engineer</td>
-                    <td>Open</td>
-                    <td>Approved</td>
+                    <td>{{drive.drive_name}}</td>
+                    <td>{{drive.job_title}}</td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-outline-info">View Applicants</a>
+                        {% if drive.is_closed %}
+                            <span class="badge bg-secondary">Closed</span>
+                        {% else %}
+                            <span class="badge bg-success">Open</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge {{'bg-success' if drive.is_approved else 'bg_warning'}}">
+                            {{ 'Approved' if drive.is_approved else 'Pending' }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/view_applicants/{{drive.id}}" class="btn btn-sm btn-outline-info">View Applicants</a>
                         <a href="#" class="btn btn-sm btn-outline-danger">Close Drive</a>
                     </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

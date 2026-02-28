@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h3>Applicants </h3>
+
+<div class="card shadow-sm mt-4">
+        <table class="table table-striped mb-0">
+            <thead class="table-primary">
+                <tr>
+                    <th>Student Name</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applicants %}
+                <tr>
+                    <td>{{app.student_name}}</td>
+                    <td>{{app.department}}</td>
+                    <td><span class="badge bg-secondary">{{app.status}}</span></td>
+                    <td>
+                        <form action="#" method="POST" class="d-flex">
+                            <select name="status" class="form-select form-select-sm me-2">
+                                <option value="Shortlised">Shortlist</option>
+                                <option value="Selected">Select</option>
+                                <option value="Rejected">Reject</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</div>
+
+{% endblock %}

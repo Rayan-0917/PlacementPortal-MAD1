@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h3>Welcome, Student</h3>
+<h3>Welcome, {{student.student_name}}</h3>
 
 <div class="card mb-5 mt-4 shadow-sm">
     <div class="card-header bg-light">
@@ -24,18 +24,27 @@
 <hr>
 
 <div class="row">
+    {% for drive in drives %}
     <div class="col-md-6 mb-3">
         <div class="card shadow-sm h-100">
             <div class="card-body">
-                <h5 class="card-title text-primary">Job Title</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Company Name</h6>
-                <p class="small"><strong>Salary: </strong>10LPA</p>
-                <p class="card-text text-truncate" style="max-width: 100%;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis provident aut labore ea nostrum, exercitationem aliquam ipsam, velit quam nihil architecto laborum! Consectetur quia odit minus aperiam sequi delectus nam, totam dolore ipsam inventore libero, commodi cupiditate magni, hic accusantium.</p>
-                <a href="#" class="btn btn-sm btn-success">Apply Now</a>
+                <h5 class="card-title text-primary">{{drive.job_title}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{drive.company_name}}</h6>
+                <p class="small"><strong>Salary: </strong>{{drive.salary}}</p>
+                <p class="small"><strong>Deadline: </strong>{{drive.deadline}}</p>
+                <p class="small"><strong>Eligibility: </strong>{{drive.eligibility}}</p>
+                <p class="card-text text-truncate" style="max-width: 100%;">{{drive.job_description}}</p>
+                <a href="/apply/{{drive.id}}" class="btn btn-sm btn-success">Apply Now</a>
                 <a href="#" class="btn btn-sm btn-primary">View Details</a>
             </div>
         </div>
     </div>
+    {% endfor %}
+    {% if not drives %}
+    <div class="col-12">
+        <p class="alert alert-light">No Ongoing Drives.</p>
+    </div>
+    {% endif %}
 </div>
 
 <hr>
@@ -52,12 +61,14 @@
                 </tr>
         </thead>
         <tbody>
+            {% for app in history %}
             <tr>
-                <td>Company 1</td>
-                <td>Drive 1</td>
-                <td>Full Stack Engineer</td>
-                <td>Shortlisted</td>
+                <td>{{app.company_name}}</td>
+                <td>{{app.drive_name}}</td>
+                <td>{{app.job_title}}</td>
+                <td><span class="badge bg-secondary">{{app.status}}</span></td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
