@@ -20,7 +20,7 @@
                     <td>{{app.department}}</td>
                     <td><span class="badge bg-secondary">{{app.status}}</span></td>
                     <td>
-                        <form action="#" method="POST" class="d-flex">
+                        <form action="/update_status/{{app.id}}" method="POST" class="d-flex">
                             <select name="status" class="form-select form-select-sm me-2">
                                 <option value="Shortlised">Shortlist</option>
                                 <option value="Selected">Select</option>

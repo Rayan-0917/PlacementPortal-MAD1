@@ -1,10 +1,22 @@
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from datetime import datetime
+import os
+
+UPLOAD_FOLDER = 'static/resumes'
+ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
 
 app = Flask(__name__)
 app.secret_key='Placement_secret_key'
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def get_db():
     conn=sqlite3.connect('Placement.db')
@@ -202,7 +214,37 @@ def apply_to_drive(did):
     db.close()
     return redirect(url_for('student_dashboard'))
 
+#upload resume
+@app.route('/upload_resume', methods=['POST'])
+def upload_resume():
+    if(session.get('role')!='Student'):
+        return redirect(url_for('login'))
+    if 'resume' not in request.files:
+        flash("No file selected")
+        return redirect(url_for('student_dashboard'))
+    file=request.files['resume']
+    if file.filename=='':
+        flash("No file selected")
+        return redirect(url_for('student_dashboard'))
+    if file and allowed_file(file.filename):
+        db=get_db()
+        student=db.execute('select id from students where user_id=?', (session['user_id'],)).fetchone()
+
+        ext=file.filename.rsplit('.', 1)[1].lower()
+        filename=secure_filename(f"student_{student['id']}_resume.{ext}")
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
+        db.execute('update students set resume_url=? where id=?', (filename, student['id']))
+        db.commit()
+        db.close()
+        flash('Resume uploaded successfully!')
+        return redirect(url_for('student_dashboard'))
+
+    flash('Invalid file type. Please upload PDF or DOC.')
+    return redirect(url_for('student_dashboard'))
+
 #all company routes
+
 
 #company dashboard
 @app.route('/company_dashboard')
@@ -239,6 +281,60 @@ def view_applicants(did):
     applicants=db.execute('select s.*, a.status, a.id as app_id, d.drive_name from applications a join students s on a.student_id=s.id join drives d on a.drive_id=d.id where a.drive_id=?', (did,)).fetchall()
     db.close()
     return render_template('view_applicants.html', applicants=applicants, drive_id=did)
+
+#shortlist, accept, reject
+@app.route('/update_status/<int:aid>', methods=['POST'])
+def update_status(aid):
+    if(session.get('role')!='Company'):
+        return redirect(url_for('login'))
+    new_status=request.form['status']
+    db=get_db()
+    db.execute('update applications set status=? where id=?', (new_status, aid))
+    db.commit()
+    drive=db.execute('select drive_id from applications where id=?', (aid,)).fetchone()
+    db.close()
+    return redirect(url_for('view_applicants', did=drive['drive_id']))
+
+#close drive
+@app.route('/close_drive/<int:did>')
+def close_drive(did):
+    if(session.get('role')!='Company'):
+        return redirect(url_for('login'))
+    db=get_db()
+    company=db.execute('select id from companies where user_id=?', (session['user_id'],)).fetchone()
+    db.execute('update drives set is_closed=1 where id=? and company_id=?', (did, company['id']))
+    db.commit()
+    db.close()
+    flash("Drive has been closed to new applications.")
+    return redirect(url_for('company_dashboard'))
+
+#edit company profile
+@app.route('/update_company_profile', methods=['POST'])
+def update_company_profile():
+    if (session.get('role') != 'Company'):
+        return redirect(url_for('login'))
+    website=request.form['website']
+    hr_contact=request.form['hr_contact']
+    description=request.form['description']
+
+    db=get_db()
+    db.execute('update companies set website=?, hr_contact=?, description=? where user_id=?', (website, hr_contact, description, session['user_id']))
+    db.commit()
+    db.close()
+    flash("Profile Update Successfully")
+    return redirect(url_for('company_dashboard'))
+
+#company profile as viewed by student or admin
+@app.route('/company_profile/<int:cid>')
+def company_profile(cid):
+    if(session.get('role') not in ['Admin', 'Student']):
+        return "Acces Denied", 403
+    db=get_db()
+    company=db.execute('select * from companies where id=?', (cid,)).fetchone()
+    open_drives=db.execute('select * from drives where company_id=? and is_approved=1 and is_closed=0', (cid, )).fetchall()
+    db.close()
+    return render_template('company_profile.html', company=company, open_drives=open_drives)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

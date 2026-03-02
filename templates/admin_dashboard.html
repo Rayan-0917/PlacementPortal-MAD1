@@ -84,7 +84,7 @@
         <tbody>
             {% for company in all_companies %}
             <tr>
-                <td>{{company.company_name}}</td>
+                <td><a href="/company_profile/{{company.id}}" target="_blank" class="text-decoration-none">{{company.company_name}}</a></td>
                 <td>
                     {% if company.website %}
                     <a href="{{ company.website if 'http' in company.website else 'https://' + company.website }}"

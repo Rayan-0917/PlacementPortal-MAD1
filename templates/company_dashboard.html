@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h3>Welcome, {{company.company_name}}</h3>
+<h3>Welcome, <span class="text-primary">{{company.company_name}}</span></h3>
 
 <div class="row  mt-4 mb-5">
     <div class="col-md-8">
         <div class="card p-4">
             <h3>Update Profile</h3>
-            <form action="#" method="POST">
+            <form action="/update_company_profile" method="POST">
                 <div class="mb-3">
                     <label class="form-label">Website</label>
                     <input type="url" name="website" class="form-control" value="{{company.website or ''}}" placeholder="https://example.com">
@@ -64,7 +64,9 @@
                     </td>
                     <td>
                         <a href="/view_applicants/{{drive.id}}" class="btn btn-sm btn-outline-info">View Applicants</a>
-                        <a href="#" class="btn btn-sm btn-outline-danger">Close Drive</a>
+                        {% if drive.is_closed==0 %}
+                        <a href="/close_drive/{{drive.id}}" class="btn btn-sm btn-outline-danger">Close Drive</a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

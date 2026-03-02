@@ -8,13 +8,22 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6 border-end">
-                    <form action="">
+                    <form action="/upload_resume" method="POST" enctype="multipart/form-data">
                         <label class="form-label">Upload Resume</label>
                         <div class="input-group">
                             <input type="file" name="resume" class="form-control" required>
                             <button type="submit" class="btn btn-primary">Upload</button>
                         </div>
                     </form>
+                </div>
+                <div class="col-md-6 border-end">
+                    <label class="form-label d-block">Current Resume</label>
+                    {% if student.resume_url %}
+                    <a href="{{url_for('static', filename='resumes/' + student.resume_url)}}" target="_blank" class="btn btn-outline-success">View Current Resume
+                    </a>
+                    {% else %}
+                    <span class="text-muted italic">No resume uploaded yet</span>
+                    {% endif %}
                 </div>
             </div>
         </div>
